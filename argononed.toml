@@ -1,16 +1,18 @@
 #
-# Argon One Fan Configuration
+# Argon One Fan & Poweroff Configuration
 #
 # List below the temperature (Celsius) and fan speed (in percent) pairs
 # Use the following form:
-# min.temperature=speed
+# temperatures = [ min_temp_0, min_temp_1]
+# speeds = [ fan_speed_0, fan_speed_1]
 #
-# Example:
-# 55=10
-# 60=55
-# 65=100
-#
-# Above example sets the fan speed to
+# Example: default fan settings:
+# temperatures = [ 55, 60, 65, ]
+# speeds = [ 10, 55, 100, ]
+
+# Example: fan always ON
+# temperatures = [ 0 ]
+# speeds = [ 100 ]
 #
 # NOTE: Lines begining with # are ignored
 #
@@ -18,6 +20,14 @@
 # sudo systemctl restart argononed.service
 #
 # Start below:
-55=10
-60=55
-65=100
+[fan]
+# Temperatures for corresponding fan speed (in degrees Celsius)
+temperatures = [ 55, 60, 65, ]
+# Fan speed for corresponding temperature (in %)
+speeds = [ 10, 55, 100, ]
+check_temperature_interval = 30
+
+[poweroff]
+reboot_range = [1.0, 2.0]
+shutdown_range = [2.0, 4.0]
+debounce_time = 0.5
