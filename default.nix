@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {}}:
+{ pkgs ? import <nixpkgs> { } }:
 
 with pkgs;
 let
@@ -14,10 +14,14 @@ python3Packages.buildPythonApplication {
   src = lib.cleanSource ./.;
 
   propagatedBuildInputs = [
+    # Python inputs
     python3Packages.click
     gpiozero
     smbus2
     python3Packages.toml
+
+    # Other required programs/libraries
+    pkgs.libraspberrypi
   ];
 
   doSetuptoolsCheck = false;
