@@ -1,7 +1,9 @@
-{ pkgs ? import <nixpkgs> { }
+{ sources ? import ./nix/sources.nix { }
+, pkgs ? import sources.nixpkgs { }
 }:
 let
   argonone = pkgs.callPackage ./default.nix { };
+  niv = (import sources.niv { }).niv;
 in
 pkgs.mkShell {
   buildInputs = [
@@ -10,5 +12,6 @@ pkgs.mkShell {
       ps.black
       ps.pytest
     ]))
+    niv
   ];
 }
