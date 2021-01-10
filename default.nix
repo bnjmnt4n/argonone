@@ -13,7 +13,7 @@ python3Packages.buildPythonApplication {
   version = lib.fileContents ./version.txt;
   format = "pyproject";
 
-  src = lib.cleanSource ./.;
+  src = pkgs.nix-gitignore.gitignoreSource [ ] ./.;
 
   propagatedBuildInputs = [
     # Python inputs
