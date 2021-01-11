@@ -186,7 +186,7 @@ def writeconfig(output: click.File):
 @click.option(
     "--config",
     "config_path",
-    default="/opt/argononed.toml",
+    default="/etc/argononed.toml",
     type=click.Path(exists=True, dir_okay=False, resolve_path=True),
     envvar="ARGONONE_CONFIG_FILE",
 )
