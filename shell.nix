@@ -12,6 +12,5 @@ pkgs.mkShell {
       ps.black
       ps.pytest
     ]))
-    niv
   ];
 }

@@ -4,14 +4,21 @@
 
 with pkgs;
 let
-  # TODO: change
-  customPackages = pkgs.callPackage ../nixos-configuration/pkgs { };
-  inherit (customPackages.python3Packages) gpiozero smbus2;
+  colorzero = pkgs.python3Packages.callPackage ./colorzero.nix { };
+  rpi-gpio = pkgs.python3Packages.callPackage ./rpi-gpio.nix { };
+  pigpio = pkgs.callPackage ./pigpio.nix { };
+  pigpio-py = pkgs.python3Packages.callPackage ./pigpio-py.nix { pigpio-c = pigpio; };
+  gpiozero = pkgs.python3Packages.callPackage ./gpiozero.nix {
+    inherit colorzero rpi-gpio pigpio-py;
+    # withPigpio = false;
+    # withRpiGpio = true;
+  };
+  smbus2 = pkgs.python3Packages.callPackage ./smbus2.nix { };
 in
-python3Packages.buildPythonApplication {
-  pname = "argonone-rpi4";
-  version = lib.fileContents ./version.txt;
-  format = "pyproject";
+  python3Packages.buildPythonApplication {
+    pname = "argonone-rpi4";
+    version = lib.fileContents ./version.txt;
+    format = "pyproject";
 
   src = pkgs.nix-gitignore.gitignoreSource [ ] ./.;
 

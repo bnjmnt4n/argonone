@@ -36,11 +36,11 @@ _DEFAULT_CONFIG = {
 _POWER_BUTTON_GPIO = 4  # GPIO pin that the power button is attached to
 
 
-def check_shutdown(config: typing.Dict):
+def shutdown_check(config: typing.Dict):
     shutdown_button = gpiozero.Button(
         _POWER_BUTTON_GPIO,
         pull_up=False,
-        bounce_time=_get_config_option("poweroff", "debounce_time"),
+        bounce_time=_get_config_option(config, "poweroff", "debounce_time"),
     )
 
     def on_shutdown_released(device: gpiozero.Button):
@@ -69,7 +69,7 @@ def get_config(file_name: typing.Union[str, pathlib.Path]) -> typing.Dict:
 
 def process_config(config: typing.Dict) -> typing.Dict:
     temperatures = _get_config_option(config, "fan", "temperatures")
-    speeds = _get_config_option(config, "fan", "temperatures")
+    speeds = _get_config_option(config, "fan", "speeds")
     assert len(temperatures) == len(speeds)
     # Check all temperatures unique
     assert len(temperatures) == len(set(temperatures))
@@ -77,8 +77,9 @@ def process_config(config: typing.Dict) -> typing.Dict:
         sorted(zip(temperatures, speeds))
     )
 
-    for _k, v in _get_config_option(config, "poweroff").items():
-        assert len(v) == 2
+    for k, v in _get_config_option(config, "poweroff").items():
+        if k != "debounce_time":
+            assert len(v) == 2
 
     return config
 
@@ -88,7 +89,7 @@ def _get_config_option(config: typing.Dict, *args) -> typing.Any:
     try:
         # Recurse into config
         for a in args:
-            option = value[a]
+            value = value[a]
     except KeyError:
         # Use default value if missing
         value = _DEFAULT_CONFIG
@@ -198,7 +199,7 @@ def run(config_path: str):
         t2 = Thread(target=temp_check, args=(config,))
         t1.start()
         t2.start()
-    finally:
+    except:
         t1.stop()
         t2.stop()
 
